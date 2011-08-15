@@ -1,0 +1,144 @@
+- modulo "/dipolo.lisp"
+	
+	- (start)
+		función que empieza el juego
+	
+	- (play)
+		realiza el menu de juego
+
+	- (human-vs-ia d)
+		empieza un juego human vs IA con profundidad de busqueda {d}
+
+	- (ia-vs-ia)
+		empieza un juego IA vs IA
+
+	- (game-over s)
+		revuelve 'b si en el estado {s} el negro gana, 'w si gana el blanco, 
+		'pb si gana el negro por falta de movimientos blancos, pw si gana el 
+		blanco por falta de movimientos negros o nil si ninguno haya todavia ganado
+
+	- (initialize-board)
+		pone la tabla de juego en la configuración inicial
+
+-modulo "/interface/interface.lisp"
+
+	- (menu)
+		imprime el menu principal
+
+	- (menu-game)
+		imprime el menu de juego
+
+	- (print-board s)
+		imprime la situación de la tabla en la pantalla
+
+	- (print-board-g s)
+		imprime la tabla actual
+	
+	- (human-move s)
+		gestiona el input umano
+
+- modulo "/agents/agent-dipolo.lisp"
+
+	- (white-ia-play s d)
+		ejecuta el movimiento elijido como mejor para el jugador blanco por 
+		la busqueda con profundidad {d} dado el estado {s}
+
+	- (black-ia-play s d)
+		ejecuta el movimiento elijido como mejor para el jugador negro por 
+		la busqueda con profundidad {d} dado el estado {s}
+
+- modulo "/search/search.lisp"
+
+	- (minimax s depth expand-fn1 expand-fn2 game-over-fn heur-fn)
+		función que revuelve el valor heuristico de el estado {s}; expand-fn1 
+		es la función que expande los estados que se pudieran haber hacendo 
+		todos los movimientos posibles del jugador que mueve primero, expand-fn2 
+		es el mismo po el segundo jugador, game-over-fn es la función que determina 
+		si un nodo es hoja, heur-fn es la función que calcula el valor heuristico de un nodo
+
+	- (alphabeta s depth a b expand-fn1 expand-fn2 game-over-fn heur-fn)
+		función de apoyo a minimax
+
+	- (alphabeta-decision s depth expand-fn1 expand-fn2 game-over-fn heur-fn)
+		revuelve la acción elijida por minimax en forma de que se puede llamar 
+		con la función {do-decision}
+
+- modulo "/search/heuristic.lisp"
+	
+	- (heur-dipolo-w node)
+		revuelve el valor heuristico de {node} (mas grande es en favor del blanco)
+
+	- (heur-dipolo-b node)
+		revuelve el valor heuristico de {node} (mas grande es en favor del negro)
+
+- modulo "/aux.lisp"
+
+;;; colección de funciónes auxiliares
+
+	- (rm el lst)
+  		revuelve una lista como {lst} pero sin los elementos iguales a {el}                                  
+
+	- (add-white-tower s tower)
+  		revuelve un estado de juego como {s} pero con {tower} de mas entre las piezas blancas
+  
+	- (add-black-tower s tower)
+  		revuelve un estado de juego como {s} pero con {tower} de mas entre las piezas negras
+  
+	- (remove-white-tower s tower)
+  		revuelve un estado de juego como {s} pero quitando {tower} de las piezas blancas
+  
+	- (remove-black-tower s tower)
+  		revuelve un estado de juego como {s} pero quitando {tower} de las piezas negras
+ 
+	- (whitep s tower)
+  		revuelve t si en el estado {s} la {tower} es blanca, si es negra o no existe revuelve nil
+ 
+	- (blackp s tower)
+  		revuelve t si en el estado {s} la {tower} es negra, si es blanca o no existe revuelve nil
+ 
+	- (adversaryp s tower1 tower2)
+  		revuelve {t} si {tower1} y {tower2} son adversarias, {nil} en lo contrario
+ 
+	- (distance tower1 tower2)
+  		revuelve la distancia entre {tower1} y {tower2}
+ 
+	- (move s tower x y n)
+  		mueve la {tower} en la posición {x,y} con {n} piezas
+  
+	- (eat s tower1 tower2)
+  		{tower1} come {tower2} y se revuelve un estado como {s} modificado de conseguencia
+ 
+	- (defun increase-tower s tower1 tower2)
+  		exegue el movimiento de spostamiento de piezas desde una torre a un otra del mismo color
+
+	- (action s tower x y)
+  		revuelve un estado derivado de {s} despues que se mueva la {tower} en la 
+		posición {x,y} si puede, y si puede comer... come
+  
+
+	- todas las acciónes posibles:
+
+		- (move-n s tower step)
+		- (move-s s tower step)
+ 		- (move-w s tower step)
+  		- (move-e s tower step)
+ 		- (move-nw s tower step)
+  		- (move-ne s tower step)
+		- (move-sw s tower step)
+		- (move-se s tower step)
+
+	- (expand-white node)
+  		expande todos los posible nodos hijos de {s} cuando es el turno del blanco
+ 
+	- (expand-black node)
+  		expande todos los posible nodos hijos de {s} cuando es el turno del negro
+  
+	- (do-decision dec)
+  		exegue la funciión elijida da los algoritmos de busqueda
+  
+	- (bigger lst)
+  		revuelve el elemento mas grande de la lista {lst}
+  
+	- (bigger-return fn lst)
+  		revuelve el elemento de {lst} que aplicandose la función {fn} revuelve 
+		el risultado mas grande de todos
